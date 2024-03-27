@@ -112,6 +112,8 @@ draw_cannon()
 
 # Game loop
 alien_timer = 0
+game_running = True
+
 while True:
     # Move all lasers
     for laser in lasers.copy():
@@ -134,6 +136,15 @@ while True:
 				# Move all aliens
 				for alien in aliens:
 					alien.forward(ALIEN_SPEED)
+					# Check for game over
+					if alien.ycor() < FLOOR_LEVEL:
+						game_running = False
+						break
     window.update()
+		
+splash_text = turtle.Turtle()
+splash_text.hideturtle()
+splash_text.color(1, 1, 1)
+splash_text.write("GAME OVER", font=("Courier", 40, "bold"), align="center")
 
 turtle.done()

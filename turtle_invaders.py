@@ -37,7 +37,7 @@ def draw_cannon():
     window.update()
 
 def move_left():
-    new_x = cannon.xcor() = CANNON_STEP
+    new_x = cannon.xcor() - CANNON_STEP
     if new_x >= LEFT + GUTTER:
         cannon.setx(new_x)
         draw_cannon()

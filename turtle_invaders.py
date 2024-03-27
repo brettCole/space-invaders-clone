@@ -28,6 +28,13 @@ cannon.color(1, 1, 1)
 cannon.shape("square")
 cannon.setposition(0, FLOOR_LEVEL)
 
+# Create turtle for writing text
+text = turtle.Turtle()
+text.penup()
+text.hideturtle()
+text.setposition(LEFT * 0.8, TOP * 0.8)
+text.color(1, 1, 1)
+
 lasers = []
 aliens = []
 
@@ -112,9 +119,17 @@ draw_cannon()
 
 # Game loop
 alien_timer = 0
+game_timer = time.time()
+score = 0
 game_running = True
 
-while True:
+while game_running:
+	time_elapsed = time.time() - game_timer
+	text.clear()
+	text.write(
+		f"Time: {time_elapsed:5.1f}s\nScore: {score:5}",
+		font=("Courier", 20, "bold"),
+	)
     # Move all lasers
     for laser in lasers.copy():
         move_laser(laser)

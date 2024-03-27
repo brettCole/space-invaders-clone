@@ -2,11 +2,14 @@ import random
 import time
 import turtle
 
+FRAME_RATE = 30 # Frames per second
+TIME_FOR_1_FRAME = 1 / FRAME_RATE # Seconds
+
 CANNON_STEP = 10
 LASER_LENGTH = 20
-LASER_SPEED = 10
+LASER_SPEED = 20
 ALIEN_SPAWN_INTERVAL = 1.2 # Seconds
-ALIEN_SPEED = 1.5
+ALIEN_SPEED = 3.5
 
 window = turtle.Screen()
 window.tracer(0)
@@ -124,6 +127,8 @@ score = 0
 game_running = True
 
 while game_running:
+	timer_this_frame = time.time()
+	
 	time_elapsed = time.time() - game_timer
 	text.clear()
 	text.write(
@@ -161,6 +166,11 @@ while game_running:
 					if alien.ycor() < FLOOR_LEVEL:
 						game_running = False
 						break
+						
+				time_for_this_frame = time.time() - timer_this_frame
+				if time_for_this_frame < TIME_FOR_1_FRAME:
+					time.sleep(TIME_FOR_1_FRAME - time_for_this_frame)
+						
     window.update()
 		
 splash_text = turtle.Turtle()

@@ -93,6 +93,13 @@ def create_alien():
 	alien.setheading(-90)
 	alien.color(random.random(), random.random(), random.random())
 	aliens.append(alien)
+	
+def remove_sprite(sprite, sprite_list):
+	sprite.clear()
+	sprite.hideturtle()
+	window.update()
+	sprite_list.remove(sprite)
+	turtle.turtles().remove(sprite)
 
 # Key bindings
 window.onkeypress(move_left, "Left")
@@ -107,18 +114,23 @@ draw_cannon()
 alien_timer = 0
 while True:
     # Move all lasers
-    for laser in lasers:
+    for laser in lasers.copy():
         move_laser(laser)
         # Remove laser if it goes off screen
         if laser.ycor() > TOP:
-            laser.clear()
-            laser.hideturtle()
-            lasers.remove(laser)
-            turtle.turtles().remove(laser)
+					remove_sprite(laser, lasers)
+					break
+				# Check for collision with aliens
+				for alien in aliens.copy():
+					if laser.distance(alien) < 20:
+						remove_sprite(laser, lasers)
+						remove_sprite(alien, aliens)
+						break
 				# Spawn new aliens when time interval elapsed
 				if time.time() - alien_timer > ALIEN_SPAWN_INTERVAL:
 					create_alien()
 					alien_timer = time.time()
+					
 				# Move all aliens
 				for alien in aliens:
 					alien.forward(ALIEN_SPEED)

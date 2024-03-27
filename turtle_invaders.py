@@ -6,7 +6,7 @@ CANNON_STEP = 10
 LASER_LENGTH = 20
 LASER_SPEED = 10
 ALIEN_SPAWN_INTERVAL = 1.2 # Seconds
-ALIEN_SPEED = 2
+ALIEN_SPEED = 1.5
 
 window = turtle.Screen()
 window.tracer(0)
@@ -27,6 +27,7 @@ cannon.penup()
 cannon.color(1, 1, 1)
 cannon.shape("square")
 cannon.setposition(0, FLOOR_LEVEL)
+cannon.cannon_movement = 0 # -1, 0 or 1 for left, stationary, right
 
 # Create turtle for writing text
 text = turtle.Turtle()
@@ -52,16 +53,13 @@ def draw_cannon():
     cannon.sety(FLOOR_LEVEL)
 
 def move_left():
-    new_x = cannon.xcor() - CANNON_STEP
-    if new_x >= LEFT + GUTTER:
-        cannon.setx(new_x)
-        draw_cannon()
+	cannon.cannon_movement = -1
 
 def move_right():
-    new_x = cannon.xcor() + CANNON_STEP
-    if new_x <= RIGHT - GUTTER:
-        cannon.setx(new_x)
-        draw_cannon()
+	cannon.cannon_movement = 1
+	
+def stop_cannon_movement():
+	cannon.cannon_movement = 0
 
 def create_laser():
     laser = turtle.Turtle()
@@ -111,6 +109,8 @@ def remove_sprite(sprite, sprite_list):
 # Key bindings
 window.onkeypress(move_left, "Left")
 window.onkeypress(move_right, "Right")
+window.onkeyrelease(stop_cannon_movement, "Left")
+window.onkeyrelease(stop_cannon_movement, "Right")
 window.onkeypress(create_laser, "space")
 window.onkeypress(turtle.bye, "q")
 window.listen()
@@ -130,6 +130,11 @@ while game_running:
 		f"Time: {time_elapsed:5.1f}s\nScore: {score:5}",
 		font=("Courier", 20, "bold"),
 	)
+	# Move cannon
+	new_x = cannon.xcor() + CANNON_STEP * cannon.cannon_movement
+	if LEFT + GUTTER <= new_x <= RIGHT - GUTTER:
+		cannon.setx(new_x)
+		draw_cannon()
     # Move all lasers
     for laser in lasers.copy():
         move_laser(laser)
@@ -142,6 +147,7 @@ while game_running:
 					if laser.distance(alien) < 20:
 						remove_sprite(laser, lasers)
 						remove_sprite(alien, aliens)
+						score += 1
 						break
 				# Spawn new aliens when time interval elapsed
 				if time.time() - alien_timer > ALIEN_SPAWN_INTERVAL:

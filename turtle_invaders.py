@@ -44,16 +44,16 @@ aliens = []
 
 # Draw cannon
 def draw_cannon():
-    cannon.clear()
-    cannon.turtlesize(1, 4) # Base
-    cannon.stamp()
-    cannon.sety(FLOOR_LEVEL + 10)
-    cannon.turtlesize(1, 1.5) # Next tier
-    cannon.stamp()
-    cannon.sety(FLOOR_LEVEL + 20)
-    cannon.turtlesize(0.8, 0.3) # Tip of cannon
-    cannon.stamp()
-    cannon.sety(FLOOR_LEVEL)
+	cannon.clear()
+	cannon.turtlesize(1, 4) # Base
+	cannon.stamp()
+	cannon.sety(FLOOR_LEVEL + 10)
+	cannon.turtlesize(1, 1.5) # Next tier
+	cannon.stamp()
+	cannon.sety(FLOOR_LEVEL + 20)
+	cannon.turtlesize(0.8, 0.3) # Tip of cannon
+	cannon.stamp()
+	cannon.sety(FLOOR_LEVEL)
 
 def move_left():
 	cannon.cannon_movement = -1
@@ -65,31 +65,31 @@ def stop_cannon_movement():
 	cannon.cannon_movement = 0
 
 def create_laser():
-    laser = turtle.Turtle()
-    laser.penup()
-    laser.color(1, 0, 0)
-    laser.hideturtle()
-    laser.setposition(cannon.xcor(), cannon.ycor())
-    laser.setheading(90)
-    # Move laser to just above cannon tip
-    laser.forward(20)
-    #Prepare to draw the laser
-    laser.pendown()
-    laser.pensize(5)
+	laser = turtle.Turtle()
+	laser.penup()
+	laser.color(1, 0, 0)
+	laser.hideturtle()
+	laser.setposition(cannon.xcor(), cannon.ycor())
+	laser.setheading(90)
+	# Move laser to just above cannon tip
+	laser.forward(20)
+	#Prepare to draw the laser
+	laser.pendown()
+	laser.pensize(5)
 
-    lasers.append(laser)
+	lasers.append(laser)
 
 def move_laser(laser):
-    laser.clear()
-    laser.forward(LASER_SPEED)
-    # Draw the laser
-    laser.forward(LASER_LENGTH)
-    laser.forward(-LASER_LENGTH)
+	laser.clear()
+	laser.forward(LASER_SPEED)
+	# Draw the laser
+	laser.forward(LASER_LENGTH)
+	laser.forward(-LASER_LENGTH)
 		
 def create_alien():
 	alien = turtle.Turtle()
 	alien.penup()
-	alieng.turtlesize(1.5)
+	alien.turtlesize(1.5)
 	alien.setposition(
 		random.randint(
 			int(LEFT + GUTTER),
@@ -125,10 +125,8 @@ alien_timer = 0
 game_timer = time.time()
 score = 0
 game_running = True
-
 while game_running:
 	timer_this_frame = time.time()
-	
 	time_elapsed = time.time() - game_timer
 	text.clear()
 	text.write(
@@ -140,38 +138,38 @@ while game_running:
 	if LEFT + GUTTER <= new_x <= RIGHT - GUTTER:
 		cannon.setx(new_x)
 		draw_cannon()
-    # Move all lasers
-    for laser in lasers.copy():
-        move_laser(laser)
-        # Remove laser if it goes off screen
-        if laser.ycor() > TOP:
-					remove_sprite(laser, lasers)
-					break
-				# Check for collision with aliens
-				for alien in aliens.copy():
-					if laser.distance(alien) < 20:
-						remove_sprite(laser, lasers)
-						remove_sprite(alien, aliens)
-						score += 1
-						break
-				# Spawn new aliens when time interval elapsed
-				if time.time() - alien_timer > ALIEN_SPAWN_INTERVAL:
-					create_alien()
-					alien_timer = time.time()
+	# Move all lasers
+	for laser in lasers.copy():
+		move_laser(laser)
+		# Remove laser if it goes off screen
+		if laser.ycor() > TOP:
+			remove_sprite(laser, lasers)
+			break
+		# Check for collision with aliens
+		for alien in aliens.copy():
+			if laser.distance(alien) < 20:
+				remove_sprite(laser, lasers)
+				remove_sprite(alien, aliens)
+				score += 1
+				break
+	# Spawn new aliens when time interval elapsed
+	if time.time() - alien_timer > ALIEN_SPAWN_INTERVAL:
+		create_alien()
+		alien_timer = time.time()
 					
-				# Move all aliens
-				for alien in aliens:
-					alien.forward(ALIEN_SPEED)
-					# Check for game over
-					if alien.ycor() < FLOOR_LEVEL:
-						game_running = False
-						break
+	# Move all aliens
+	for alien in aliens:
+		alien.forward(ALIEN_SPEED)
+		# Check for game over
+		if alien.ycor() < FLOOR_LEVEL:
+			game_running = False
+			break
 						
-				time_for_this_frame = time.time() - timer_this_frame
-				if time_for_this_frame < TIME_FOR_1_FRAME:
-					time.sleep(TIME_FOR_1_FRAME - time_for_this_frame)
+	time_for_this_frame = time.time() - timer_this_frame
+	if time_for_this_frame < TIME_FOR_1_FRAME:
+		time.sleep(TIME_FOR_1_FRAME - time_for_this_frame)
 						
-    window.update()
+	window.update()
 		
 splash_text = turtle.Turtle()
 splash_text.hideturtle()

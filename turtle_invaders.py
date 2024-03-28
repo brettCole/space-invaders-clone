@@ -128,11 +128,18 @@ game_running = True
 while game_running:
 	timer_this_frame = time.time()
 	time_elapsed = time.time() - game_timer
+	rounded_timer = round(time.time() - game_timer)
 	text.clear()
 	text.write(
 		f"Time: {time_elapsed:5.1f}s\nScore: {score:5}",
 		font=("Courier", 20, "bold"),
 	)
+	if rounded_timer == 15:
+		ALIEN_SPEED = 4.5
+	if rounded_timer == 30:
+		ALIEN_SPEED = 5
+	if rounded_timer == 60:
+		ALIEN_SPEED = 6
 	# Move cannon
 	new_x = cannon.xcor() + CANNON_STEP * cannon.cannon_movement
 	if LEFT + GUTTER <= new_x <= RIGHT - GUTTER:
@@ -162,6 +169,9 @@ while game_running:
 		alien.forward(ALIEN_SPEED)
 		# Check for game over
 		if alien.ycor() < FLOOR_LEVEL:
+			game_running = False
+			break
+		if cannon.distance(alien) < 30:
 			game_running = False
 			break
 						
